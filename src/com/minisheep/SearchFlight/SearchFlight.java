@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.minisheep.Bean.Flight;
+import com.minisheep.Bean.FlightDetail;
 import com.minisheep.util.MysqlUtil;
 
 public class SearchFlight {
@@ -17,4 +18,5 @@ public class SearchFlight {
 		flights = MysqlUtil.flightSearch(carrier, flight);
 		return flights;
 	}
+	
 }

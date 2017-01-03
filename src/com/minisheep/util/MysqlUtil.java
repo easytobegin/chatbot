@@ -3,11 +3,13 @@ package com.minisheep.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.stream.FileCacheImageInputStream;
 
+import com.minisheep.Bean.CityMap;
 import com.minisheep.Bean.Flight;
 import com.minisheep.Bean.Knowledge;
 import com.mysql.jdbc.PreparedStatement;
@@ -190,6 +192,9 @@ public class MysqlUtil {
 		}
 	}
 	
+	/*
+	 * 根据飞机航班编号返回列表
+	 */
 	public static List<Flight> flightSearch(String carrier,String flightname){   //根据飞机航班编号返回列表
 		String systemdate = ToolsUtil.getSystemDate();  //系统日期
 		System.out.println("当前系统时间为:" + systemdate);
@@ -236,5 +241,30 @@ public class MysqlUtil {
 			mysqlUtil.closeConnection(conn, ps, rs);
 		}
 		return flights;
+	}
+	
+	/*
+	 * 根据中文名返回英文简写
+	 */
+	public static String IataCodebyCNnameSearch(String cityName){
+		String searchsql = "select IATACODE from CityMap where DISPLAYCNNAME = ?";
+		MysqlUtil mysqlUtil = new MysqlUtil();
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		conn = mysqlUtil.getConnection();
+		try {
+			ps = (PreparedStatement) conn.prepareStatement(searchsql);
+			ps.setString(1, cityName);
+			rs = ps.executeQuery();
+			if(rs.next()){
+				return rs.getString("IATACODE");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
 	}
 }

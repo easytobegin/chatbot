@@ -7,12 +7,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Pattern;
-
-import javax.tools.Tool;
 
 import com.minisheep.Bean.Flight;
 import com.minisheep.SearchFlight.SearchFlight;
+import com.minisheep.SearchFlight.SearchIATACodeByCNName;
 import com.minisheep.util.ToolsUtil;
 
 public class Chat {
@@ -83,6 +81,7 @@ public class Chat {
 			 * 也可以考虑先进去栏目，再搜索就在指定的栏目数据库里面查找
 			 */
 			boolean hasdata = false;
+			List<String> findData = new ArrayList<String>();
 			if(isFlightSearch == true){  //如果没有结果就继续往下
 				String flightIdName = "";
 				for(int i=0;i<names.length;i++){
@@ -90,10 +89,16 @@ public class Chat {
 						flightIdName = ToolsUtil.lowerToupper(names[i]);
 						//System.out.println("变成大写后的FlightId:" + flightIdName);
 						hasdata = responseFlightIdSearch(flightIdName);  //航班号做回答,如果没有数据就继续往下查找别的数据库等
+					}else{  //就是哪里飞哪里了
+						SearchIATACodeByCNName searchIATACodeByCNName = new SearchIATACodeByCNName();
+						findData = searchIATACodeByCNName.searchIataCodebyCNname(names[i]);  //遍历
+						for(int j=0;j<findData.size();j++){
+							System.out.println(names[i] + "英文简写为:" + findData.get(j));  //这里已经获取两个地名的英文简写了
+						}	
 					}
 				}
 			}
-			if(hasdata == false){
+			if(hasdata == false && findData.size() == 0){   //普通静态的数据库
 				Chat chat = new Chat();
 				chat.ChatWithBot(text, openId);
 			}

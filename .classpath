@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Lucene"/>
+	<classpathentry kind="lib" path="/Users/minisheep/Downloads/IK Analyzer 2012FF_hf1/IKAnalyzer2012FF_u1.jar"/>
+	<classpathentry kind="lib" path="/Users/minisheep/Downloads/mysql-connector-java-5.1.34-bin.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

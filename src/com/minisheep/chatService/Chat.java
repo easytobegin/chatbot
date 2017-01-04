@@ -13,6 +13,7 @@ import com.minisheep.Bean.FlightDetail;
 import com.minisheep.SearchFlight.SearchFlight;
 import com.minisheep.SearchFlight.SearchFlightDetail;
 import com.minisheep.SearchFlight.SearchIATACodeByCNName;
+import com.minisheep.util.MysqlUtil;
 import com.minisheep.util.ToolsUtil;
 
 public class Chat {
@@ -27,7 +28,7 @@ public class Chat {
 	}
 	
 	
-	public static boolean responseFlightIdSearch(String flightname){  //回复根据航班号查询,数据库相关信息都在javabean了，要什么取什么
+	public boolean responseFlightIdSearch(String flightname,String req){  //回复根据航班号查询,数据库相关信息都在javabean了，要什么取什么
 		SearchFlight search = new SearchFlight();
 		boolean hasData = false;
 		List<Flight> flights = new ArrayList<Flight>();
@@ -46,6 +47,11 @@ public class Chat {
 			System.out.println(finalStr);
 			System.out.println(lastupdateTime);
 			System.out.println();
+			String openId = "guest";
+			Date now = new Date();
+			String createTime = this.format.format(now);
+			int chatCategory = 6; //航班查询
+			MysqlUtil.saveChatLog(openId, createTime, req, finalStr+lastupdateTime, chatCategory);
 			hasData = true;
 		}
 		return hasData;
@@ -90,7 +96,8 @@ public class Chat {
 					if(ToolsUtil.RegexFlightId(names[i]) == true){
 						flightIdName = ToolsUtil.lowerToupper(names[i]);
 						//System.out.println("变成大写后的FlightId:" + flightIdName);
-						hasdata = responseFlightIdSearch(flightIdName);  //航班号做回答,如果没有数据就继续往下查找别的数据库等
+						Chat chat = new Chat();
+						hasdata = chat.responseFlightIdSearch(flightIdName,text);  //航班号做回答,如果没有数据就继续往下查找别的数据库等
 					}
 				}
 			}

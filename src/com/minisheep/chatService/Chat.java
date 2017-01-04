@@ -66,8 +66,8 @@ public class Chat {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("分类为:" + category);
-			System.out.println();
+			//System.out.println("分类为:" + category);
+			//System.out.println();
 			String[] names = category.split("\\|");  //根据分词结果判断用户是否是要查询航班动态?
 			
 			boolean isFlightSearch = false;
@@ -116,9 +116,9 @@ public class Chat {
 				}
 				SearchFlightDetail searchFlightDetail = new SearchFlightDetail();
 				flightDetails = searchFlightDetail.flightDetail(dep, arr);
-				if(flightDetails.size() == 0){
+				if(flightDetails.size() == 0 && cityname.size() != 0){
 					System.out.println("没有此航班的动态信息!");
-					break;
+					//break;
 				}
 				for(FlightDetail detail : flightDetails){
 					String finalstr = "航班号:" + detail.getFlightId() + "\n" + "预计起飞时间:" + detail.getScheduleDepartureTime() + "\n" + "预计到达时间:"

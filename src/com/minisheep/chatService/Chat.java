@@ -106,13 +106,20 @@ public class Chat {
 				List<FlightDetail> flightDetails = new ArrayList<FlightDetail>();
 				String dep = "";
 				String arr = "";
-				if(cityname.size() != 0){
-					dep = cityname.get(0);  //出发城市
-					arr = cityname.get(1);  //到达城市
+				if(cityname.size() == 1){
+					dep = cityname.get(0);
+					System.out.println("dep:" + dep + "," + "arr:" + arr);
+				}else if(cityname.size() == 2){
+					dep = cityname.get(0);
+					arr = cityname.get(1);
 					System.out.println("dep:" + dep + "," + "arr:" + arr);
 				}
 				SearchFlightDetail searchFlightDetail = new SearchFlightDetail();
 				flightDetails = searchFlightDetail.flightDetail(dep, arr);
+				if(flightDetails.size() == 0){
+					System.out.println("没有此航班的动态信息!");
+					break;
+				}
 				for(FlightDetail detail : flightDetails){
 					String finalstr = "航班号:" + detail.getFlightId() + "\n" + "预计起飞时间:" + detail.getScheduleDepartureTime() + "\n" + "预计到达时间:"
 							+ detail.getScheduleArrivalTime() + "\n" + "实际起飞时间:" + detail.getActualDepartureTime() + "\n" +

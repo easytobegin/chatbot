@@ -11,8 +11,11 @@ import javax.imageio.stream.FileCacheImageInputStream;
 
 import com.minisheep.Bean.CityMap;
 import com.minisheep.Bean.Flight;
+import com.minisheep.Bean.FlightDetail;
 import com.minisheep.Bean.Knowledge;
+import com.minisheep.SearchFlight.SearchFlightDetail;
 import com.mysql.jdbc.PreparedStatement;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 
 public class MysqlUtil {
 	private Connection getConnection(){
@@ -201,7 +204,7 @@ public class MysqlUtil {
 		//systemdate = "2016/12/28";  //移植的时候改成当日日期
 		//String scheauleTimesql = "select * from Flight where CARRIER = ? and FLIGHT = ?"+" and OPDATE = ?"; //计划起飞时间
 		String scheauleTimesql = "select * from Flight where CARRIER = ? and FLIGHT = ?";
-		System.out.println("sql语句为:" + scheauleTimesql);
+		//System.out.println("sql语句为:" + scheauleTimesql);
 		
 		List<Flight> flights = new ArrayList<Flight>();
 		MysqlUtil mysqlUtil = new MysqlUtil();
@@ -264,7 +267,44 @@ public class MysqlUtil {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			mysqlUtil.closeConnection(conn, ps, rs);
 		}
 		return "";
+	}
+	
+	/*
+	 * 出发城市名和抵达城市名
+	 */
+	public static List<FlightDetail> depCityAndarrCity(String dep,String arr){
+		String searchsql = "select * from FlightDetail where ORIGIN = ? and DESTINATION = ?";
+		MysqlUtil mysqlUtil = new MysqlUtil();
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		List<FlightDetail> flightDetails = new ArrayList<FlightDetail>();
+		
+		conn = mysqlUtil.getConnection();
+		try{
+			ps = (PreparedStatement) conn.prepareStatement(searchsql);
+			ps.setString(1, dep);
+			ps.setString(2, arr);
+			rs = ps.executeQuery();
+			while(rs.next()){
+				FlightDetail flightDetail = new FlightDetail();
+				flightDetail.setFlightId(rs.getInt("FLIGHTID"));  //FLIGHTID
+				flightDetail.setScheduleDepartureTime(rs.getString("SCHEDULEDEPARTURETIME"));  //计划起飞时间
+				flightDetail.setScheduleArrivalTime(rs.getString("SCHEDULEARRIVALTIME")); //计划到达时间
+				flightDetail.setActualDepartureTime(rs.getString("ACTUALDEPARTURETIME")); //实际起飞时间
+				flightDetail.setActualArrivalTime(rs.getString("ACTUALARRIVALTIME")); //实际到达时间
+				flightDetail.setLastUpdated(rs.getString("LASTUPDATED"));  //最后更新时间
+				flightDetails.add(flightDetail);
+			}
+		}catch (Exception e) {
+			// TODO: handle exception
+		}finally{
+			mysqlUtil.closeConnection(conn, ps, rs);
+		}
+		return flightDetails;
 	}
 }

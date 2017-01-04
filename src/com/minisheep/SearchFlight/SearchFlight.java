@@ -9,7 +9,7 @@ import com.minisheep.util.MysqlUtil;
 
 public class SearchFlight {
 	public List<Flight> searchFlightname(String flightname){  //比如SC4770
-		Integer length = flightname.length();
+		int length = flightname.length();
 		String carrier = flightname.substring(0,2);  //SC
 		String flight = flightname.substring(2,length);  //4770
 	
